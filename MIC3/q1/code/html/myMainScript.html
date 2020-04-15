@@ -1,0 +1,293 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Report Q1</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-03"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Report Q1</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Init</a></li><li><a href="#2">Part a</a></li><li><a href="#3">Justification</a></li><li><a href="#5">Part b</a></li><li><a href="#7">part c</a></li><li><a href="#8">Justification</a></li></ul></div><h2 id="1">Init</h2><pre class="codeinput">tic
+phantom = imread(<span class="string">'../data/SheppLogan256.png'</span>);
+theta = 0:3:177;
+mx = 256;
+[oR, xp] = radon(phantom, theta);
+unfiltered = iradon(oR,theta,<span class="string">'linear'</span>,<span class="string">'none'</span>); <span class="comment">%unfiltered backprojection</span>
+
+figure;
+imshow(phantom,[]);
+title(<span class="string">"Phantom Image"</span>);
+figure;
+imshow(unfiltered,[]);
+title(<span class="string">"Unfiltered Backprojection"</span>);
+
+runa = 1;
+runb = 1;
+runc = 1;
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <h2 id="2">Part a</h2><pre class="codeinput"><span class="keyword">if</span> runa == 1
+<span class="keyword">for</span> L = [1,0.5]
+<span class="keyword">for</span> flt = [<span class="string">"Ram-Lak"</span>, <span class="string">"Shepp-Logan"</span>, <span class="string">"Cosine"</span>]
+filtered = flt_bp(oR, xp, theta, L, flt, mx);
+figure;
+imshow(filtered,[]);
+title(flt + <span class="string">" L = "</span> + L);
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="3">Justification</h2><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_08.png" alt=""> <p>For <img src="myMainScript_eq09916195040547750610.png" alt="$L = \omega_{max}$">:</p><p>Ram-Lak: There are <b>Artifacts</b> in backgraound and the phantom is <b>grainy</b> , because the projectios were taken only along 60 angles at an interval <img src="myMainScript_eq05763827001503989922.png" alt="$3^{\circ}$">. These artifacts are due to <b>high frequency</b> coponents in the Radon Tranform</p><p>Shepp-Logan: The artifacts are slighly less prominent as lesser weightage is given to high frequencies as compared to the Ram-Lak filter.</p><p>Cosine: Artifacts are significantly reduced as much lesser weightage is given to higher frequencies.</p><p>For <img src="myMainScript_eq01508691722477247019.png" alt="$L = \omega_{max}/2$"></p><p>Ram-Lak: The artifcats are significantly reduced as the higher frequencies are cut off, but this also leads to blurring at the boundaries</p><p>Shepp-Logan: Artifacts redued, blurring increases, same as above</p><p>Cosine: Artifacts are greatly reduced, significant blurring as frequencies <img src="myMainScript_eq05995329561825575899.png" alt="$&gt;\omega_{max}$"> are cut off and higher frequencies are not given very less weightage</p><p><img vspace="5" hspace="5" src="cosine.png" alt=""> </p><p><img vspace="5" hspace="5" src="shepp-logan.png" alt=""> </p><p><img vspace="5" hspace="5" src="ram-lak.png" alt=""> </p><h2 id="5">Part b</h2><pre class="codeinput"><span class="keyword">if</span> runb == 1
+S = repmat(phantom , [1 1 3] );
+sigma = [0 1 5];
+
+<span class="keyword">for</span> i = 1:3
+<span class="keyword">if</span> i ~= 1
+ S(:,:,i) = imgaussfilt(S(:,:,1), sigma(i));
+<span class="keyword">end</span>
+figure;
+imshow(S(:,:,i));
+title(<span class="string">"S"</span>+sigma(i));
+<span class="keyword">end</span>
+
+L =1; flt = <span class="string">"Ram-Lak"</span>;
+rrmse_b = zeros(1,3);
+<span class="keyword">for</span> i = 1:3
+    [sR(:,:,i),xp] = radon(S(:,:,i), theta);
+    filtered = flt_bp(sR(:,:,i), xp, theta, L, flt, mx);
+    rrmse_b(i) = rrmse(S(:,:,i), filtered);
+    figure;
+    imshow(filtered,[]);
+    title(<span class="string">"R"</span>+sigma(i));
+<span class="keyword">end</span>
+disp(<span class="string">"RRMSE Values:"</span>)
+disp(<span class="string">"RRMSE sigma=0 :"</span> + rrmse_b(1))
+disp(<span class="string">"RRMSE sigma=1 : "</span>+ rrmse_b(2))
+disp(<span class="string">"RRMSE sigma=5 : "</span>+ rrmse_b(3))
+<span class="keyword">end</span>
+
+<span class="comment">%%%Justification</span>
+</pre><pre class="codeoutput">RRMSE Values:
+RRMSE sigma=0 :0.81561
+RRMSE sigma=1 : 0.53153
+RRMSE sigma=5 : 0.070787
+</pre><img vspace="5" hspace="5" src="myMainScript_09.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_10.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_11.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_12.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_13.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_14.png" alt=""> <p>RRMSE is the highest for <img src="myMainScript_eq07299299560620312100.png" alt="$\sigma = 0$"> and lowest for <img src="myMainScript_eq08722110780746043360.png" alt="$\sigma = 5$">.</p><p>As S0 is sharp it has higher frequencies and since the no of angles considered for projection are only 60, the filtered back-projection introduces many artifacts, which leads to higher artifacts.</p><p>Whereas for S5, it is highly blurred, which significantly reduces the higher frequency components in the Radon Transform, and reduces artifacts, which gives a better RRRMSE.</p><h2 id="7">part c</h2><pre class="codeinput"><span class="keyword">if</span> runc == 1
+freq = ((length(xp):-1:1)/length(xp));
+<span class="keyword">for</span> i = 1:3
+    val = zeros(1,length(freq));
+    j = 0;
+    <span class="keyword">for</span> f = freq
+        j = j +1;
+        val(j) = rrmse(S(:,:,i),flt_bp(sR(:,:,i),xp,theta, f, <span class="string">"Ram-Lak"</span>, mx));
+    <span class="keyword">end</span>
+  figure(<span class="string">'NumberTitle'</span>,<span class="string">'Off'</span>,<span class="string">'Name'</span>,<span class="string">"c. Plot for sigma ="</span> + sigma(i));
+  plot(freq,val);
+  xlabel(<span class="string">"L"</span>);
+  ylabel(<span class="string">"RRMSE"</span>);
+  title(<span class="string">"Plot for sigma ="</span> + sigma(i));
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="8">Justification</h2><img vspace="5" hspace="5" src="myMainScript_15.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_16.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_17.png" alt=""> <p>For small values RRMSE is very high in all the three cases, as lower frequency components are insufficient in reconstructing the image.</p><p>The RRMSE reduces and reaches a minima as blurring reduces.</p><p>For R5 it remains almost constant with L</p><p>For R0 and R1 RRMSE increases with L due to artifacts introduces by very high frequencies</p><p>Minima(R5) &lt; Minima(R1) &lt; Minima(R0)</p><p>This is because the frequencies required to represent the image increase with increase in sharpness.</p><pre class="codeinput">toc
+</pre><pre class="codeoutput">Elapsed time is 36.735384 seconds.
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Report Q1
+%% Init
+tic
+phantom = imread('../data/SheppLogan256.png');
+theta = 0:3:177;
+mx = 256;
+[oR, xp] = radon(phantom, theta);
+unfiltered = iradon(oR,theta,'linear','none'); %unfiltered backprojection
+
+figure;
+imshow(phantom,[]);
+title("Phantom Image");
+figure;
+imshow(unfiltered,[]);
+title("Unfiltered Backprojection");
+
+runa = 1;
+runb = 1;
+runc = 1;
+%% Part a
+if runa == 1
+for L = [1,0.5] 
+for flt = ["Ram-Lak", "Shepp-Logan", "Cosine"]
+filtered = flt_bp(oR, xp, theta, L, flt, mx);
+figure;
+imshow(filtered,[]);
+title(flt + " L = " + L);
+end
+end
+end
+
+%%% Justification
+%%
+% 
+% For $L = \omega_{max}$:
+%
+% Ram-Lak: There are *Artifacts* in backgraound and the phantom is *grainy* , because the projectios were taken only along 60 angles at an interval $3^{\circ}$.
+% These artifacts are due to *high frequency* coponents in the Radon Tranform
+% 
+% Shepp-Logan: The artifacts are slighly less prominent as lesser weightage is given to high frequencies as compared to the Ram-Lak filter.
+%
+% Cosine: Artifacts are significantly reduced as much lesser weightage is given to higher frequencies.  
+%
+% For $L = \omega_{max}/2$
+% 
+% Ram-Lak: The artifcats are significantly reduced as the higher
+% frequencies are cut off, but this also leads to blurring at the
+% boundaries
+% 
+% Shepp-Logan: Artifacts redued, blurring increases, same as above
+%
+% Cosine: Artifacts are greatly reduced, significant blurring as
+% frequencies $>\omega_{max}$ are cut off and higher frequencies are not
+% given very less weightage
+%
+% <<cosine.png>>
+% 
+% <<shepp-logan.png>>
+% 
+% <<ram-lak.png>>
+% 
+%% Part b
+
+if runb == 1
+S = repmat(phantom , [1 1 3] );
+sigma = [0 1 5];
+
+for i = 1:3
+if i ~= 1
+ S(:,:,i) = imgaussfilt(S(:,:,1), sigma(i));
+end
+figure;
+imshow(S(:,:,i));
+title("S"+sigma(i));
+end
+
+L =1; flt = "Ram-Lak";
+rrmse_b = zeros(1,3);
+for i = 1:3
+    [sR(:,:,i),xp] = radon(S(:,:,i), theta);
+    filtered = flt_bp(sR(:,:,i), xp, theta, L, flt, mx);
+    rrmse_b(i) = rrmse(S(:,:,i), filtered);
+    figure;
+    imshow(filtered,[]);
+    title("R"+sigma(i));
+end
+disp("RRMSE Values:")
+disp("RRMSE sigma=0 :" + rrmse_b(1))
+disp("RRMSE sigma=1 : "+ rrmse_b(2))
+disp("RRMSE sigma=5 : "+ rrmse_b(3))
+end
+
+%%%Justification
+%%
+% RRMSE is the highest for $\sigma = 0$ and lowest for $\sigma = 5$.
+%
+% As S0 is sharp it has higher frequencies and since the no of angles
+% considered for projection are only 60, the filtered back-projection
+% introduces many artifacts, which leads to higher artifacts.
+%
+% Whereas for S5, it is highly blurred, which significantly reduces the
+% higher frequency components in the Radon Transform, and reduces
+% artifacts, which gives a better RRRMSE.
+%
+
+%% part c 
+if runc == 1
+freq = ((length(xp):-1:1)/length(xp));
+for i = 1:3
+    val = zeros(1,length(freq));
+    j = 0;
+    for f = freq
+        j = j +1;
+        val(j) = rrmse(S(:,:,i),flt_bp(sR(:,:,i),xp,theta, f, "Ram-Lak", mx));
+    end
+  figure('NumberTitle','Off','Name',"c. Plot for sigma =" + sigma(i));
+  plot(freq,val);
+  xlabel("L");
+  ylabel("RRMSE");
+  title("Plot for sigma =" + sigma(i));
+end
+end
+%%% Justification
+%%
+%
+% For small values RRMSE is very high in all the three cases, as lower
+% frequency components are insufficient in reconstructing the image.
+%
+% The RRMSE reduces and reaches a minima as blurring reduces.
+%
+% For R5 it remains almost constant with L
+%
+% For R0 and R1 RRMSE increases with L due to artifacts introduces by very
+% high frequencies
+% 
+% Minima(R5) < Minima(R1) < Minima(R0)
+%
+% This is because the frequencies required to represent the image increase
+% with increase in sharpness.
+%
+toc
+##### SOURCE END #####
+--></body></html>

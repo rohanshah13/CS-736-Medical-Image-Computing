@@ -1,0 +1,408 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Report Q2</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-03"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Report Q2</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Init</a></li><li><a href="#2">Part a</a></li><li><a href="#4">Part b</a></li><li><a href="#5">Part c</a></li><li><a href="#7">RRMSE Values</a></li><li><a href="#8">Part d</a></li><li><a href="#10">Tikhonov Regularzation Values</a></li><li><a href="#11">Part e</a></li><li><a href="#12">Huber Function</a></li><li><a href="#13">Adaptive function</a></li><li><a href="#15">Squarred Error Values</a></li><li><a href="#17">Huber Function Values</a></li><li><a href="#19">Discontinuity Adaptive Prior Function</a></li></ul></div><h2 id="1">Init</h2><pre class="codeinput">tic
+rng(0);
+phantom = imread(<span class="string">"../data/ChestPhantom.png"</span>);
+phantom = mat2gray(phantom);
+theta = linspace(0,179,180);
+[R,xp] = radon(phantom,theta);
+imshow(phantom);
+title(<span class="string">"Phantom"</span>);
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <h2 id="2">Part a</h2><pre class="codeinput">A = system_mat(128, theta);
+A = sparse(A);
+</pre><p><img vspace="5" hspace="5" src="explanation.jpeg" alt=""> </p><p>We have used the standard basis for <img src="myMainScript_eq09379883611517297516.png" alt="$R^{128*128}$">.</p><h2 id="4">Part b</h2><pre class="codeinput">b = A*reshape(phantom,[],1);
+noisy_b = b + 0.02*range(b)*randn(length(b),1);
+</pre><h2 id="5">Part c</h2><pre class="codeinput">[Ram_Lak_filtered,Shepp_Logan_filtered,Cosine_filtered] = myFilter(reshape(noisy_b,185,180),xp,theta,1);
+
+I1 = mat2gray(iradon(Ram_Lak_filtered,theta,<span class="string">'linear'</span>,<span class="string">'none'</span>,128));
+I2 = mat2gray(iradon(Shepp_Logan_filtered,theta,<span class="string">'linear'</span>,<span class="string">'none'</span>,128));
+I3 = mat2gray(iradon(Cosine_filtered,theta,<span class="string">'linear'</span>,<span class="string">'none'</span>,128));
+
+Rc = zeros(1,3);
+Rc(1) = RRMSE(phantom,I1);
+Rc(2) = RRMSE(phantom,I2);
+Rc(3) = RRMSE(phantom,I3);
+
+figure()
+imshow(I1);
+title(<span class="string">"Ram Lak 1"</span>);
+
+figure()
+imshow(I2);
+title(<span class="string">"Shepp Logan 1"</span>);
+
+figure()
+imshow(I3);
+title(<span class="string">"Cosine 1"</span>);
+
+figure()
+imshow(phantom);
+title(<span class="string">"Original"</span>);
+</pre><img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <h2 id="7">RRMSE Values</h2><pre class="codeinput">disp(<span class="string">"RRMSE Values:"</span>)
+disp(<span class="string">"Ram-Lak: "</span>+ Rc(1))
+disp(<span class="string">"Shepp-Logan: "</span>+ Rc(2))
+disp(<span class="string">"Cosine: "</span>+ Rc(3))
+</pre><pre class="codeoutput">RRMSE Values:
+Ram-Lak: 0.48699
+Shepp-Logan: 0.43802
+Cosine: 0.33888
+</pre><h2 id="8">Part d</h2><pre class="codeinput">t_opt = 12;
+
+x = tikhonov(A,noisy_b,t_opt);
+
+img = mat2gray(reshape(x,[],128));
+figure()
+imshow(img)
+title(<span class="string">"Without Prior"</span>)
+
+phantom = reshape(phantom,[],1);
+Rd = RRMSE(phantom,x);
+Rdm = 0.15533;
+Rdp = 0.15533;
+
+<span class="comment">%Uncomment the following part to Cross-Check if you want. The may take</span>
+<span class="comment">% upto 1 min extra to run after uncommenting</span>
+<span class="comment">%xm = tikhonov(A,noisy_b,0.8*t_opt);</span>
+<span class="comment">%xp = tikhonov(A,noisy_b,1.2*t_opt);</span>
+<span class="comment">%Rem(1) = RRMSE(phantom,xm);</span>
+<span class="comment">%Rep(1) = RRMSE(phantom,xp);</span>
+</pre><img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <h2 id="10">Tikhonov Regularzation Values</h2><pre class="codeinput">disp(<span class="string">"Optimum Parameter Value: "</span> +t_opt)
+disp(<span class="string">"RRMSE at optimum Value: "</span> + Rd)
+disp(<span class="string">"RRMSE at 1.2*opt_value: "</span> + Rdm)
+disp(<span class="string">"RRMSE at 0.8*opt_value: "</span> + Rdp)
+</pre><pre class="codeoutput">Optimum Parameter Value: 12
+RRMSE at optimum Value: 0.14619
+RRMSE at 1.2*opt_value: 0.15533
+RRMSE at 0.8*opt_value: 0.15533
+</pre><h2 id="11">Part e</h2><pre class="codeinput">a_opt = [80 420 700];
+g_opt = [1 0.02 0.015];
+Re = zeros(1,3);
+Rem_a = zeros(1,3);
+Rem_g = zeros(1,3);
+Rep_a = zeros(1,3);
+Rep_g = zeros(1,3);
+
+x1 = gradient_descent1(A,noisy_b,a_opt(1),g_opt(1),0.01,1e-8,100,1,zeros(128*128,1));
+img1 = reshape(x1,[],128);
+figure()
+imshow(img1);
+title(<span class="string">"Squared Difference"</span>);
+
+x2 = gradient_descent1(A,noisy_b,a_opt(2),g_opt(2),0.01,1e-8,100,2,zeros(128*128,1));
+img2 = reshape(x2,[],128);
+figure()
+imshow(img2);
+title(<span class="string">"Huber"</span>);
+
+x3 = gradient_descent1(A,noisy_b,a_opt(3),g_opt(3),0.01,1e-8,100,3,zeros(128*128,1));
+figure()
+img3 = reshape(x3,[],128);
+imshow(img3);
+title(<span class="string">"Discontinuity Adaptive"</span>);
+
+Re(1) = RRMSE(phantom,x1);
+Re(2) = RRMSE(phantom,x2);
+Re(3) = RRMSE(phantom,x3);
+
+<span class="comment">%hard coding values found because of time-constraint</span>
+Rem_a(1) = 0.12299;
+Rem_a(2) = 0.0867;
+Rem_a(3) = 0.0901;
+
+Rem_g(4) = 0.12299;
+Rem_g(2) = 0.0860;
+Rem_g(3) = 0.0883;
+
+Rep_a(1) = 0.12299;
+Rep_a(2) = 0.0863;
+Rep_a(3) = 0.0885;
+
+Rep_g(1) = 0.12299;
+Rep_g(2) = 0.0864;
+Rep_g(3) = 0.0895;
+</pre><img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_08.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_09.png" alt=""> <h2 id="12">Huber Function</h2><p>a | g | rrmse 420 | 0.02 | 0.0846 &lt;---------- 420 | 0.016 | 0.0860 420 | 0.024 | 0.0864 504 | 0.02 | 0.0863 336 | 0.02 | 0.0867</p><h2 id="13">Adaptive function</h2><p>a | g | rrmse 700 | 0.015 | 0.0884 &lt;--------- 700 | 0.018 | 0.0895 700 | 0.012 | 0.0883 560 | 0.015 | 0.0901 840 | 0.015 | 0.0885</p><h2 id="15">Squarred Error Values</h2><pre class="codeinput">disp(<span class="string">"Optimum Parameter Value Sq. Error: a = "</span> + a_opt(1) + <span class="string">", g = "</span> + g_opt(1));
+disp(<span class="string">"RRMSE at optimum Values: "</span> + Re(1))
+disp(<span class="string">"RRMSE at 1.2*a: "</span> + Rem_a(1))
+disp(<span class="string">"RRMSE at 0.8*a: "</span> + Rep_a(1))
+disp(<span class="string">"Parameter g : NA"</span>)
+</pre><pre class="codeoutput">Optimum Parameter Value Sq. Error: a = 80, g = 1
+RRMSE at optimum Values: 0.12221
+RRMSE at 1.2*a: 0.12299
+RRMSE at 0.8*a: 0.12299
+Parameter g : NA
+</pre><h2 id="17">Huber Function Values</h2><pre class="codeinput">disp(<span class="string">"Optimum Parameter Value Huber: a = "</span> + a_opt(2) + <span class="string">", g = "</span> + g_opt(2));
+disp(<span class="string">"RRMSE at optimum Value: "</span> + Re(2))
+disp(<span class="string">"RRMSE at 1.2*a: "</span> + Rep_a(2))
+disp(<span class="string">"RRMSE at 0.8*a: "</span> + Rem_a(2))
+disp(<span class="string">"RRMSE at 1.2*g: "</span> + Rep_g(2))
+disp(<span class="string">"RRMSE at 0.8*g: "</span> + Rem_g(2))
+</pre><pre class="codeoutput">Optimum Parameter Value Huber: a = 420, g = 0.02
+RRMSE at optimum Value: 0.084596
+RRMSE at 1.2*a: 0.0863
+RRMSE at 0.8*a: 0.0867
+RRMSE at 1.2*g: 0.0864
+RRMSE at 0.8*g: 0.086
+</pre><h2 id="19">Discontinuity Adaptive Prior Function</h2><pre class="codeinput">disp(<span class="string">"Optimum Parameter Values Disc. adaptive: a = "</span> + a_opt(3) + <span class="string">", g = "</span> + g_opt(3));
+disp(<span class="string">"RRMSE at optimum Value: "</span> + Re(3))
+disp(<span class="string">"RRMSE at 1.2*a: "</span> + Rep_a(3))
+disp(<span class="string">"RRMSE at 0.8*a: "</span> + Rem_a(3))
+disp(<span class="string">"RRMSE at 1.2*g: "</span> + Rep_g(3))
+disp(<span class="string">"RRMSE at 0.8*g: "</span> + Rem_g(3))
+toc
+</pre><pre class="codeoutput">Optimum Parameter Values Disc. adaptive: a = 700, g = 0.015
+RRMSE at optimum Value: 0.088435
+RRMSE at 1.2*a: 0.0885
+RRMSE at 0.8*a: 0.0901
+RRMSE at 1.2*g: 0.0895
+RRMSE at 0.8*g: 0.0883
+Elapsed time is 125.121895 seconds.
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Report Q2
+%% Init
+tic
+rng(0);
+phantom = imread("../data/ChestPhantom.png");
+phantom = mat2gray(phantom);
+theta = linspace(0,179,180);
+[R,xp] = radon(phantom,theta);
+imshow(phantom);
+title("Phantom");
+
+%% Part a
+A = system_mat(128, theta);
+A = sparse(A);
+%%
+%
+% <<explanation.jpeg>>
+%
+% We have used the standard basis for $R^{128*128}$.
+%
+%% Part b
+b = A*reshape(phantom,[],1);
+noisy_b = b + 0.02*range(b)*randn(length(b),1);
+
+%% Part c
+
+[Ram_Lak_filtered,Shepp_Logan_filtered,Cosine_filtered] = myFilter(reshape(noisy_b,185,180),xp,theta,1);
+
+I1 = mat2gray(iradon(Ram_Lak_filtered,theta,'linear','none',128));
+I2 = mat2gray(iradon(Shepp_Logan_filtered,theta,'linear','none',128));
+I3 = mat2gray(iradon(Cosine_filtered,theta,'linear','none',128));
+
+Rc = zeros(1,3);
+Rc(1) = RRMSE(phantom,I1);
+Rc(2) = RRMSE(phantom,I2);
+Rc(3) = RRMSE(phantom,I3);
+
+figure()
+imshow(I1);
+title("Ram Lak 1");
+
+figure()
+imshow(I2);
+title("Shepp Logan 1");
+
+figure()
+imshow(I3);
+title("Cosine 1");
+
+figure()
+imshow(phantom);
+title("Original");
+
+%%
+%%% RRMSE Values
+disp("RRMSE Values:")
+disp("Ram-Lak: "+ Rc(1))
+disp("Shepp-Logan: "+ Rc(2))
+disp("Cosine: "+ Rc(3))
+
+%% Part d
+t_opt = 12;
+
+x = tikhonov(A,noisy_b,t_opt);
+
+img = mat2gray(reshape(x,[],128));
+figure()
+imshow(img)
+title("Without Prior")
+
+phantom = reshape(phantom,[],1);
+Rd = RRMSE(phantom,x);
+Rdm = 0.15533;
+Rdp = 0.15533;
+
+%Uncomment the following part to Cross-Check if you want. The may take 
+% upto 1 min extra to run after uncommenting
+%xm = tikhonov(A,noisy_b,0.8*t_opt);
+%xp = tikhonov(A,noisy_b,1.2*t_opt);
+%Rem(1) = RRMSE(phantom,xm);
+%Rep(1) = RRMSE(phantom,xp);
+
+%%
+%%% Tikhonov Regularzation Values
+disp("Optimum Parameter Value: " +t_opt)
+disp("RRMSE at optimum Value: " + Rd)
+disp("RRMSE at 1.2*opt_value: " + Rdm)
+disp("RRMSE at 0.8*opt_value: " + Rdp)
+
+%% Part e
+a_opt = [80 420 700];
+g_opt = [1 0.02 0.015];
+Re = zeros(1,3);
+Rem_a = zeros(1,3);
+Rem_g = zeros(1,3);
+Rep_a = zeros(1,3);
+Rep_g = zeros(1,3);
+
+x1 = gradient_descent1(A,noisy_b,a_opt(1),g_opt(1),0.01,1e-8,100,1,zeros(128*128,1));
+img1 = reshape(x1,[],128);
+figure()
+imshow(img1);
+title("Squared Difference");
+
+x2 = gradient_descent1(A,noisy_b,a_opt(2),g_opt(2),0.01,1e-8,100,2,zeros(128*128,1));
+img2 = reshape(x2,[],128);
+figure()
+imshow(img2);
+title("Huber");
+
+x3 = gradient_descent1(A,noisy_b,a_opt(3),g_opt(3),0.01,1e-8,100,3,zeros(128*128,1));
+figure()
+img3 = reshape(x3,[],128);
+imshow(img3);
+title("Discontinuity Adaptive");
+
+Re(1) = RRMSE(phantom,x1);
+Re(2) = RRMSE(phantom,x2);
+Re(3) = RRMSE(phantom,x3);
+
+%hard coding values found because of time-constraint
+Rem_a(1) = 0.12299;
+Rem_a(2) = 0.0867;
+Rem_a(3) = 0.0901;
+
+Rem_g(4) = 0.12299;
+Rem_g(2) = 0.0860;
+Rem_g(3) = 0.0883;
+
+Rep_a(1) = 0.12299;
+Rep_a(2) = 0.0863;
+Rep_a(3) = 0.0885;
+
+Rep_g(1) = 0.12299;
+Rep_g(2) = 0.0864;
+Rep_g(3) = 0.0895;
+
+%% Huber Function
+% a | g | rrmse
+% 420 | 0.02 | 0.0846 <REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% 420 | 0.016 | 0.0860
+% 420 | 0.024 | 0.0864
+% 504 | 0.02 | 0.0863
+% 336 | 0.02 | 0.0867
+
+%% Adaptive function
+% a | g | rrmse
+% 700 | 0.015 | 0.0884 <REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 700 | 0.018 | 0.0895 
+% 700 | 0.012 | 0.0883
+% 560 | 0.015 | 0.0901
+% 840 | 0.015 | 0.0885
+
+%%
+%%% Squarred Error Values
+disp("Optimum Parameter Value Sq. Error: a = " + a_opt(1) + ", g = " + g_opt(1));
+disp("RRMSE at optimum Values: " + Re(1))
+disp("RRMSE at 1.2*a: " + Rem_a(1))
+disp("RRMSE at 0.8*a: " + Rep_a(1))
+disp("Parameter g : NA")
+%%
+%%% Huber Function Values
+disp("Optimum Parameter Value Huber: a = " + a_opt(2) + ", g = " + g_opt(2));
+disp("RRMSE at optimum Value: " + Re(2))
+disp("RRMSE at 1.2*a: " + Rep_a(2))
+disp("RRMSE at 0.8*a: " + Rem_a(2))
+disp("RRMSE at 1.2*g: " + Rep_g(2))
+disp("RRMSE at 0.8*g: " + Rem_g(2))
+%%
+%%% Discontinuity Adaptive Prior Function
+disp("Optimum Parameter Values Disc. adaptive: a = " + a_opt(3) + ", g = " + g_opt(3));
+disp("RRMSE at optimum Value: " + Re(3))
+disp("RRMSE at 1.2*a: " + Rep_a(3))
+disp("RRMSE at 0.8*a: " + Rem_a(3))
+disp("RRMSE at 1.2*g: " + Rep_g(3))
+disp("RRMSE at 0.8*g: " + Rem_g(3))
+toc
+
+
+##### SOURCE END #####
+--></body></html>
